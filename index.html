@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name ="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Mesa de ayuda</title>
+</head>
+
+<body>
+    <h1>Mesa de Ayuda</h1>
+    <form  id="formulario-ticket">
+        <label for="titulo">Titulo del problema</label><br>
+        <input
+            id="titulo"
+            name ="titulo"
+            type="text"
+            placeholder="Ejemaplo: No puedo acceder al correo"
+            required
+        ><br>
+        <label for ="prioridad">Prioridad</label><br>
+        <select id="prioridad">
+            <option value = "Baja">Baja</option>
+            <option value = "media">Media</option>
+            <option value = "Alta">Alta</option>
+        </select><br>
+        <label for="descripcion">Describe el problema</label><br>
+        <textarea id="descripcion" required></textarea><br>
+        <button type = "submit">Crear Ticket</button>
+         <p id = "resultado"></p>
+    </form>
+    <ui id="lista-tickets" class="lista-tickets"></ui>
+
+    <script>
+    const formulario = document.querySelector("#formulario-ticket");
+    const cajaTitulo = document.querySelector("#titulo");
+    const resultado = document.querySelector("#resultado");
+    const listaTickets = document.querySelector("#lista-tickets");
+    const prioridad = document.querySelector("#prioridad");
+    const descripcion = document.querySelector("#descripcion");
+
+    const tickets = JSON.parse(localStorage.getItem("tickets") || "[]");
+    
+    
+    for (const ticket of tickets){
+        const elementoLista = document.createElement("li")
+
+        elementoLista.textContent=
+            ticket.titulo + "_" +
+            ticket.estado + " — " +
+            ticket.prioridad + " — " +
+            ticket.descripcion;
+
+        listaTickets.append(elementoLista);
+
+    }
+
+
+    formulario.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+
+        const ticket ={
+            titulo: cajaTitulo.value,
+            estado: "pendiente",
+            prioridad: prioridad.value,
+            descripcion: descripcion.value
+        };
+
+        const elementoLista = document.createElement("li");
+        elementoLista.textContent = ticket.titulo + "_" + ticket.estado + "_" +ticket.prioridad + " " + ticket.descripcion ;
+        listaTickets.append(elementoLista);
+        cajaTitulo.value = "";
+        descripcion.value = "";
+        tickets.push(ticket);
+        localStorage.setItem("tickets", JSON.stringify(tickets));
+        console.log(tickets);
+
+       
+    });
+     console.log(localStorage.getItem("tickets"));
+    </script>
+
+</body>
+
+</html>
